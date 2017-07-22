@@ -34,12 +34,12 @@ export default {
 
         let extendVuex = (namespace, source) => {
             if (Object.getOwnPropertyNames(source.prototype).length === 1) {
-                vuex.store._actions[(vuex.namespace ? vuex.namespace + '/' : '') + source.name] = addVuexActionInvokedHook(source.prototype.constructor)
+                vuex.store._actions[(namespace ? namespace + '/' : '') + source.name] = addVuexActionInvokedHook(source.prototype.constructor)
             }
             else {
                 Object.getOwnPropertyNames(source.prototype).map(method => {
                     if (method !== 'constructor') {
-                        vuex.store._actions[(vuex.namespace ? vuex.namespace + '/' : '') + method] = addVuexActionInvokedHook(source.prototype[method])
+                        vuex.store._actions[(namespace ? namespace + '/' : '') + method] = addVuexActionInvokedHook(source.prototype[method])
                     }
                 })
             }
@@ -49,7 +49,7 @@ export default {
             if (typeof mixin === 'object') {
                 if (mixin.vuex === true) {
                     mixin.sources.map(funktion => {
-                        extendVuex(mixin.namespace, funktion)
+                        extendVuex(mixin.namespace || vuex.namespace, funktion)
                         addMixinFunction(funktion)
                     })
                 }
