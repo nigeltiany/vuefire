@@ -1,7 +1,7 @@
 import Firebase from 'firebase'
 
 export default {
-    install(Vue, { project, vuex, mixins }) {
+    install(Vue, { project, vuex, mixins = [] }) {
 
         let addInvokedHook = (funktion) => {
             return new Proxy(funktion, {
