@@ -1,4 +1,5 @@
 import Firebase from 'firebase'
+import FirebaseDocument from './components/firebase-document.vue'
 
 export default {
     install(Vue, { project, vuex, mixins = [] }) {
@@ -66,6 +67,9 @@ export default {
 
         const firebaseApp = new FirebaseApp(project)
         Vue.prototype.$firebase = firebaseApp
+
+        Vue.component('firebase-document', FirebaseDocument)
+
     }
 }
 

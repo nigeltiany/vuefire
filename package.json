@@ -1,6 +1,6 @@
 {
   "name": "@vuefire/vuefire",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Firebase for vuejs",
   "main": "dist/vuefire.js",
   "scripts": {
