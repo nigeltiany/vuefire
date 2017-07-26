@@ -3535,7 +3535,7 @@ exports.default = {
         var addInvokedHook = function addInvokedHook(funktion) {
             return new Proxy(funktion, {
                 apply: function apply(target, thisArg, argumentsList) {
-                    target.apply(undefined, [{ firebase: firebaseApp, database: firebaseApp.database }].concat(_toConsumableArray(argumentsList)));
+                    target.apply(undefined, [{ firebase: firebaseApp.firebase, database: firebaseApp.database }].concat(_toConsumableArray(argumentsList)));
                 }
             });
         };
@@ -3543,7 +3543,7 @@ exports.default = {
         var addVuexActionInvokedHook = function addVuexActionInvokedHook(funktion) {
             return [new Proxy(funktion, {
                 apply: function apply(target, thisArg, argumentsList) {
-                    target.apply(undefined, [Object.assign({ firebase: firebaseApp, database: firebaseApp.database }, vuex.store)].concat(_toConsumableArray(argumentsList)));
+                    target.apply(undefined, [Object.assign({ firebase: firebaseApp.firebase, database: firebaseApp.database }, vuex.store)].concat(_toConsumableArray(argumentsList)));
                 }
             })];
         };

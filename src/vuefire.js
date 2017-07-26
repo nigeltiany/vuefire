@@ -7,7 +7,7 @@ export default {
         let addInvokedHook = (funktion) => {
             return new Proxy(funktion, {
                 apply: function(target, thisArg, argumentsList) {
-                    target({ firebase: firebaseApp, database: firebaseApp.database }, ...argumentsList)
+                    target({ firebase: firebaseApp.firebase, database: firebaseApp.database }, ...argumentsList)
                 }
             })
         }
@@ -15,7 +15,7 @@ export default {
         let addVuexActionInvokedHook = (funktion) => {
             return [new Proxy(funktion, {
                 apply: function(target, thisArg, argumentsList) {
-                    target(Object.assign({ firebase: firebaseApp, database: firebaseApp.database }, vuex.store), ...argumentsList)
+                    target(Object.assign({ firebase: firebaseApp.firebase, database: firebaseApp.database }, vuex.store), ...argumentsList)
                 }
             })]
         }
