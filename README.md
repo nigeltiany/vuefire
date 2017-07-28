@@ -134,3 +134,6 @@ methods: {
   ])
 }
 ```
+
+#### Helper Mixins
+* [Email Auth](https://github.com/nigeltiany/email-auth) - Mixins that makes authentication through email easier in the Vue/Vuex Context
