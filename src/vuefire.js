@@ -66,7 +66,8 @@ export default {
         })
 
         const firebaseApp = new FirebaseApp(project)
-        Vue.prototype.$firebase = firebaseApp
+        Vue.prototype.$firebase = firebaseApp.firebase
+        Vue.prototype.Firebase = Firebase
 
         Vue.component('firebase-document', FirebaseDocument)
 
