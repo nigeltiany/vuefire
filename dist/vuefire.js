@@ -3590,7 +3590,8 @@ exports.default = {
         });
 
         var firebaseApp = new FirebaseApp(project);
-        Vue.prototype.$firebase = firebaseApp;
+        Vue.prototype.$firebase = firebaseApp.firebase;
+        Vue.prototype.Firebase = _firebase2.default;
 
         Vue.component('firebase-document', _firebaseDocument2.default);
     }
