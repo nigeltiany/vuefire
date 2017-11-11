@@ -15,7 +15,7 @@ export default {
         let addVuexActionInvokedHook = (funktion) => {
             return [new Proxy(funktion, {
                 apply: function(target, thisArg, argumentsList) {
-                    target(Object.assign({ firebase: firebaseApp.firebase, database: firebaseApp.database }, vuex.store), ...argumentsList)
+                    target({ firebase: firebaseApp.firebase, database: firebaseApp.database }, ...argumentsList)
                 }
             })]
         }
@@ -33,32 +33,22 @@ export default {
             }
         }
 
-        let extendVuex = (namespace, source) => {
-            if (Object.getOwnPropertyNames(source.prototype).length === 1) {
-                vuex.store._actions[(namespace ? namespace + '/' : '') + source.name] = addVuexActionInvokedHook(source.prototype.constructor)
-            }
-            else {
-                Object.getOwnPropertyNames(source.prototype).map(method => {
-                    if (method !== 'constructor') {
-                        vuex.store._actions[(namespace ? namespace + '/' : '') + method] = addVuexActionInvokedHook(source.prototype[method])
-                    }
-                })
-            }
-        }
+        vuex.namespaces.map((namespace) => {
+            Object.keys(vuex.store._actions).map((actionName) => {
+                if (actionName.match(namespace)) {
+                    vuex.store._actions[actionName] = addVuexActionInvokedHook(vuex.store._actions[actionName][0])
+                }
+                if (vuex.namespaces.includes('root') && !actionName.match('/')) {
+                    vuex.store._actions[actionName] = addVuexActionInvokedHook(vuex.store._actions[actionName][0])
+                }
+            })
+        })
 
         mixins.map(mixin => {
             if (typeof mixin === 'object') {
-                if (mixin.vuex === true) {
-                    mixin.sources.map(funktion => {
-                        extendVuex(mixin.namespace || vuex.namespace, funktion)
-                        addMixinFunction(funktion)
-                    })
-                }
-                else {
-                    mixin.sources.map(funktion => {
-                        addMixinFunction(funktion)
-                    })
-                }
+                mixin.sources.map(funktion => {
+                    addMixinFunction(funktion)
+                })
             }
             else if (typeof mixin === 'function') {
                 addMixinFunction(mixin)
