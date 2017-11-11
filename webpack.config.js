@@ -6,7 +6,9 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, './dist'),
     publicPath: '/dist/',
-    filename: 'vuefire.min.js'
+    filename: 'vuefire.min.js',
+    library: ['vuefire'],
+    libraryTarget: 'umd'
   },
   module: {
     rules: [
