@@ -46,93 +46,63 @@ Vue.use(VueFire, {
 })
 
 // in components
-methods: {
-  this.$firebase.specialFirebaseAction('params')
+computed: {
+  user() {
+    this.$firebase.specialFirebaseAction('params')
+  }
 }
 ```
 
-#### Apply mixins to vuex global namespace
+#### Supply vuex actions a second parameter that is firebase
 ```js
+import VueFire from '@vuefire/vuefire'
+
 Vue.use(VueFire, {
   project: {
-    // ...
+    apiKey: "<API_KEY>",
+    authDomain: "<PROJECT_ID>.firebaseapp.com",
+    databaseURL: "https://<DATABASE_NAME>.firebaseio.com",
+    storageBucket: "<BUCKET>.appspot.com",
+    messagingSenderId: "<SENDER_ID>",
+    projectId: '<PROJECT_ID>',
   },
   vuex: {
+    namespaces: ['firebase'],
     store: store
-  },
-  mixins: [
-      {
-          vuex: true,
-          sources: [
-              function globalVuexAction({ firebase, database, commit }) {
-                    console.log('citizen of the world!')
-                    commit('mutationInTheGlobalNameSpace')
-              }, //... other functions
-          ]
-      }
-  ]
+  }
 })
-
-// in components
-methods: {
-  ...mapActions([
-    'globalVuexAction'
-  ])
-},
-mounted () {
-  this.globalVuexAction();
-  // Or ..
-  this.$firebase.globalVuexAction()
-}
 ```
-
-#### Apply some mixins to a namespace
 ```js
-// File with custom helper
-export function customNameSpacedVuexFirebaseMixin ({firebase, database, commit}) {
-  // What will you create ?
-  // return firebase().auth.currentUser
-  // database().ref('users/).// some custom functionality
-  commit('someMutation')
+// firebase namespaced module
+export default {
+  namespaced: true,
+  /**
+    * ...your state, getter, and mutations are here
+    */  
+  actions: {
+    // and now the magic
+    saveToFirebase ({commit, rootState, state}, {firebase, database}, payload) {
+      // firebase.database() or just
+      database().ref('a/path/on/firebase'). // you know the rest
+    }
+  }
 }
 ```
 ```js
-// import above file
-import customGlobalHelper from 'helperFile'
-Vue.use(VueFire, {
-  project: {
-    // ...
-  },
-  vuex: {
-    namespace: 'main_namespace',
-    store: store
-  },
-  mixins: [
-      {
-          vuex: true,
-          namespace: 'different_namespace',
-          sources: [customGlobalHelper]
-      },
-      {
-          vuex: true,
-          sources: [
-              function inTheMainNameSpace() {
-                
-              }
-          ]
-      }
-  ]
-})
-
-// in components
-methods: {
-  ...mapActions('different_namespace', [
-    'customNameSpacedVuexFirebaseMixin',
-  ]),
-  ...mapActions('main_namespace', [
-    'inTheMainNameSpace',
-  ])
+// just add 'root' to namespaces array to have your root action have a firebase parameter
+vuex: {
+  namespaces: ['root', 'firebase'],
+  store: store
 }
+```
+```text
+firebase components coming soon
+- [ ] firebase-app
+- [ ] firebase-auth
+- [x] firebase-document 
+- [ ] firebase-messaging
+- [ ] firebase-query
+- [ ] firebase-storage
 ```
 
 #### Helper Mixins
